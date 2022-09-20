@@ -95,7 +95,7 @@ class MZAboutBoxViewController: NSViewController {
     }
 
     @IBAction func visitWebsite(_ sender: Any?) {
-        NSWorkspace.shared.open(NSURL(string: "http://github/pawong/NextEvent")! as URL)
+        NSWorkspace.shared.open(NSURL(string: "https://github.com/pawong/NextEvent")! as URL)
     }
 
     func forceHelp(force: Bool) {
