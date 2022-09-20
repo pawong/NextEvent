@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="Mec-K7-Y5U">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17156"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Window Controller-->
+        <scene sceneID="wqz-8B-Lke">
+            <objects>
+                <windowController storyboardIdentifier="MZ Alert Box Window Controller" showSeguePresentationStyle="single" id="Fim-uS-KLg" customClass="MZAlertBoxWindowController" customModule="NextEvent" customModuleProvider="target" sceneMemberID="viewController">
+                    <window key="window" identifier="MZ Alert Box" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" tabbingMode="disallowed" id="fce-V1-aPW" customClass="NSPanel">
+                        <windowStyleMask key="styleMask" fullSizeContentView="YES"/>
+                        <windowCollectionBehavior key="collectionBehavior" moveToActiveSpace="YES" fullScreenPrimary="YES"/>
+                        <rect key="contentRect" x="425" y="461" width="414" height="100"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+                        <connections>
+                            <outlet property="delegate" destination="Fim-uS-KLg" id="CiI-ce-pEH"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="Mec-K7-Y5U" kind="relationship" relationship="window.shadowedContentViewController" id="EzZ-tq-OCw"/>
+                    </connections>
+                </windowController>
+                <customObject id="oXn-Tg-iqc" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-259" y="-718"/>
+        </scene>
+        <!--MZ Alert Box Controller-->
+        <scene sceneID="MTN-0H-a8k">
+            <objects>
+                <viewController storyboardIdentifier="MZ Alert Box Controller" showSeguePresentationStyle="single" id="Mec-K7-Y5U" userLabel="MZ Alert Box Controller" customClass="MZAlertBoxViewController" customModule="NextEvent" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="Fws-kS-WGg">
+                        <rect key="frame" x="0.0" y="0.0" width="733" height="492"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <box fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5ZJ-Le-f3V">
+                                <rect key="frame" x="-3" y="-4" width="739" height="75"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" id="A94-2t-5rR">
+                                    <rect key="frame" x="3" y="3" width="733" height="57"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UJx-pr-OE7">
+                                            <rect key="frame" x="322" y="13" width="101" height="32"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ndn-fO-INI">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                                <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="okayPress:" target="Mec-K7-Y5U" id="HCs-08-D27"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                </view>
+                            </box>
+                            <textField identifier="itemColor" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3pH-wZ-2Qh" userLabel="CalanedarColor">
+                                <rect key="frame" x="0.0" y="462" width="733" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="truncatingTail" enabled="NO" refusesFirstResponder="YES" sendsActionOnEndEditing="YES" identifier="itemColor" drawsBackground="YES" id="7xF-h4-dBe">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <box fixedFrame="YES" borderType="none" title="Box" titlePosition="noTitle" transparent="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HLJ-ID-nWb">
+                                <rect key="frame" x="-3" y="93" width="739" height="339"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" id="4YZ-7p-j9i">
+                                    <rect key="frame" x="0.0" y="0.0" width="739" height="339"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <imageView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lhc-ds-PWa">
+                                            <rect key="frame" x="305" y="153" width="129" height="146"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES"/>
+                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" image="NSApplicationIcon" id="FHH-OR-X6g"/>
+                                        </imageView>
+                                        <textField identifier="itemTitle" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3hm-TW-rlF" userLabel="EventTitle">
+                                            <rect key="frame" x="33" y="105" width="674" height="40"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" enabled="NO" refusesFirstResponder="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" identifier="itemTitle" placeholderString="Name of event goes here." usesSingleLineMode="YES" id="Rmp-z3-kXA">
+                                                <font key="font" metaFont="system" size="30"/>
+                                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField identifier="eventDate" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UBl-6E-6Ln" userLabel="EventDate">
+                                            <rect key="frame" x="33" y="73" width="674" height="24"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" enabled="NO" refusesFirstResponder="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" identifier="itemTime" placeholderString="12/12/12" usesSingleLineMode="YES" id="AKj-dK-HMm">
+                                                <font key="font" metaFont="system" size="18"/>
+                                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YNv-kC-zGQ" userLabel="EventLocation Button">
+                                            <rect key="frame" x="20" y="40" width="699" height="24"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                                            <buttonCell key="cell" type="bevel" alternateTitle="place event text here" bezelStyle="rounded" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" truncatesLastVisibleLine="YES" imageScaling="proportionallyDown" inset="2" id="RSb-Lm-mkH">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system" size="18"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="eventLocationButtonPress:" target="Mec-K7-Y5U" id="ZTA-Lp-GuS"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                </view>
+                            </box>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="calendarColorTextField" destination="3pH-wZ-2Qh" id="lDw-2F-UC3"/>
+                        <outlet property="eventDateTextField" destination="UBl-6E-6Ln" id="ZfL-9m-Eta"/>
+                        <outlet property="eventLocationButton" destination="YNv-kC-zGQ" id="6Vp-gB-B3N"/>
+                        <outlet property="eventTitleTextField" destination="3hm-TW-rlF" id="8sv-qE-rrn"/>
+                        <outlet property="okayButton" destination="UJx-pr-OE7" id="qqU-DT-bvP"/>
+                    </connections>
+                </viewController>
+                <customObject id="Myr-1f-n7P" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <userDefaultsController representsSharedInstance="YES" id="2DI-ia-AaS"/>
+            </objects>
+            <point key="canvasLocation" x="-259.5" y="-178"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="NSApplicationIcon" width="32" height="32"/>
+    </resources>
+</document>

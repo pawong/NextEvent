@@ -1,0 +1,3 @@
+NextEvent is a countdown widget for your Mac menu bar. It displays the time until the next event in your calendar or task list.
+
+Released under the MIT License.
