@@ -36,5 +36,7 @@
 	<string>NSApplication</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs Reminder access to display reminders in list</string>
+	<key>UILaunchStoryboardName</key>
+	<string>MZAboutBox.storyboard</string>
 </dict>
 </plist>

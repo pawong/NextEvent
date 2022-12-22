@@ -41,32 +41,22 @@ class Settings: NSObject {
     }
 
     func unarchive() {
-        let fileManager = FileManager()
-        let jsonDecoder = JSONDecoder()
-        if fileManager.fileExists(atPath: archivePath()) {
-            let jsonData = NSKeyedUnarchiver.unarchiveObject(withFile: archivePath()) as! Data
-            do {
-                try settings = jsonDecoder.decode(Settings.self, from: jsonData)
-            } catch {
-                self.reset()
-                settings = Settings()
-            }
-        } else {
-            settings = Settings()
+        do {
+            let readData = try Data(contentsOf: archivePath())
+            self.settings = try JSONDecoder().decode(Settings.self, from: readData)
+        } catch {
+            reset()
         }
-        self.needsDisplay = true
     }
 
     func archive() {
-        let jsonEncoder = JSONEncoder()
-        let jsonData = try! jsonEncoder.encode(settings)
-        NSKeyedArchiver.archiveRootObject(jsonData, toFile: archivePath())
-        self.needsDisplay = true
+        let jsonData = try! JSONEncoder().encode(self.settings)
+        try! jsonData.write(to: archivePath())
     }
 
-    func archivePath() -> String {
+    func archivePath() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0].path + "/" + (Bundle.main.infoDictionary!["CFBundleName"] as! String) + ".cfg"
+        return URL(fileURLWithPath: paths[0].path + "/" + (Bundle.main.infoDictionary!["CFBundleName"] as! String) + ".cfg")
     }
 
     func reset() {

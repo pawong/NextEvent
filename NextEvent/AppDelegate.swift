@@ -121,9 +121,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         if viewController.update() == true {
             self.setIcons()
-            statusItem.image = icon
+            statusItem.button?.image = icon
         }
-        statusItem.attributedTitle = NSAttributedString(
+        statusItem.button?.attributedTitle = NSAttributedString(
             string: viewController.getNextEventStatus(),
             attributes: [NSAttributedString.Key.font:  NSFont(name: "Helvetica Neue", size: 13)!]
         )
@@ -313,7 +313,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             isGlowing = false
             glowTimer.invalidate()
             glowTimer = nil
-            statusItem.image = icon
+            statusItem.button?.image = icon
         }
     }
 
@@ -331,7 +331,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         // redraw icon
-        statusItem.image = self.combineImages(base: icon, overlay: glowIcon, fraction: imageTrans)
+        statusItem.button?.image = self.combineImages(base: icon, overlay: glowIcon, fraction: imageTrans)
     }
 
 }
