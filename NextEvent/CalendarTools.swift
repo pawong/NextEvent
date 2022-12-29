@@ -82,6 +82,7 @@ class CalendarTools: NSObject {
 
         var count = 0
         for item in sortedKeys {
+            //print(item.calendar as Any))
             results.append(item)
             count += 1
             if count >= n {
@@ -90,11 +91,12 @@ class CalendarTools: NSObject {
         }
 
         if results.count <= 0 {
-            let newItem = EKCalendarItem()
+            let store = EKEventStore()
+            let newItem = EKEvent(eventStore: store)
             newItem.title = "N/A"
             results.append(newItem)
         }
-
+        
         return results
     }
 
@@ -129,13 +131,14 @@ class CalendarTools: NSObject {
         for item in sortedKeys {
             results.append(item)
         }
-
+        
         if results.count <= 0 {
-            let newItem = EKCalendarItem()
+            let store = EKEventStore()
+            let newItem = EKEvent(eventStore: store)
             newItem.title = "N/A"
             results.append(newItem)
         }
-
+        
         return results
     }
 
@@ -167,7 +170,8 @@ class CalendarTools: NSObject {
         }
 
         if results.count <= 0 {
-            let newItem = EKCalendarItem()
+            let store = EKEventStore()
+            let newItem = EKEvent(eventStore: store)
             newItem.title = "N/A"
             results.append(newItem)
         }

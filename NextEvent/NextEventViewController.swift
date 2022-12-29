@@ -350,7 +350,7 @@ class NextEventViewController: NSViewController {
                 let now: Date = Date()
                 let itemDate:Date? = getDateFromEventItem(item)
                 let itemLocation: String = getLocationFromEventItem(item)
-                var color: NSColor = NSColor.black
+                var color: NSColor = NSColor.white
                 if item.calendar != nil {
                     color = item.calendar!.color
                 }
@@ -459,6 +459,7 @@ class NextEventViewController: NSViewController {
                 reminders: reminderLists
             )
         }
+        
         self.setControllerViewSize(calendarItems.count)
         DispatchQueue.main.async { [weak self] in
             self?.tableView.reloadData()
@@ -559,10 +560,12 @@ extension NextEventViewController: NSTableViewDataSource, NSTableViewDelegate {
             (result.leadTime.stringValue, result.leadTimeUnit.stringValue) = getLeadTimeStrings(itemDate)
         }
 
+        //print(copyCalendarItems[row])
+        
         if copyCalendarItems[row].calendar != nil {
             result.calendarColor.backgroundColor = copyCalendarItems[row].calendar.color
         } else {
-            result.calendarColor.backgroundColor = result.eventTitle.backgroundColor
+            result.calendarColor.backgroundColor = NSColor.white
         }
 
         return result;

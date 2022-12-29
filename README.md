@@ -2,7 +2,7 @@
 
 NextEvent is a countdown widget for your Mac menu bar. It displays the time until the next event in your calendar or reminders.
 
- - Choose the number of events to display, 1, 3, 5, 10 or today only events.
+ - Choose the number of events to display, 1, 3, 5, 10, today only events or for the next 24 hours.
  - Flash icon on 15 minute warning for next event due.
  - Blocking alerts, so you don't miss an appointment.
  - Visual and audio notification.
@@ -11,6 +11,10 @@ NextEvent is a countdown widget for your Mac menu bar. It displays the time unti
 ![](Screenshot1.png)
 
 ## Versions
+>[2.2.3](builds/NextEvent_v2.2.3/NextEvent.zip)
+>    Changes:
+>    - Ventura bug fixes.
+
 >[2.2.1](builds/NextEvent_v2.2.1/NextEvent.zip)
 >    Changes:
 >    - First Open Source Release

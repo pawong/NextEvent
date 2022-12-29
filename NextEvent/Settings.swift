@@ -33,7 +33,7 @@ class Settings: NSObject {
     }
 
     var settings: Settings = Settings()
-    var needsDisplay: Bool = false
+    var needsDisplay: Bool = true
 
     override init() {
         super.init()
