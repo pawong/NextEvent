@@ -1,4 +1,4 @@
-# NextEvent ![](NextEvent/Assets.xcassets/AppIcon.appiconset/NextEvent-6.png)
+# NextEvent ![](NextEvent/Assets.xcassets/AppIcon.appiconset/icon_32x32@2x.png)
 
 NextEvent is a countdown widget for your Mac menu bar. It displays the time until the next event in your calendar or reminders.
 
@@ -13,7 +13,7 @@ NextEvent is a countdown widget for your Mac menu bar. It displays the time unti
 ## Versions
 >[2.2.3](builds/NextEvent_v2.2.3/NextEvent.zip)
 >    Changes:
->    - Ventura bug fixes.
+>    - Ventura bug fixes
 
 >[2.2.1](builds/NextEvent_v2.2.1/NextEvent.zip)
 >    Changes:
