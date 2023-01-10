@@ -74,6 +74,9 @@ class CalendarTools: NSObject {
             //print(((event) as! EKEvent).title, event.value(forKey: "travelTime")!)
             let date = ((event) as! EKEvent).startDate
             if (date != nil && date! > now) {
+                // adding a print statement keeps calendar from coming back nil
+                // i clearly have no idea what's going on!
+                print("calendar color: \(String(describing: event.calendar.color))")
                 all[event] = date!
             }
         }

@@ -149,7 +149,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @IBAction func refreshAll(_ sender: Any?) {
-        viewController.refreshAll(Any?.self)
+        viewController.refreshAll(self)
     }
 
     @objc func itemsChanged(_ notification: Notification) {

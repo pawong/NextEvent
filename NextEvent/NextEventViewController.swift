@@ -351,7 +351,7 @@ class NextEventViewController: NSViewController {
                 let itemDate:Date? = getDateFromEventItem(item)
                 let itemLocation: String = getLocationFromEventItem(item)
                 var color: NSColor = NSColor.white
-                if item.calendar != nil {
+                if item.calendar != nil && item.calendar!.color != nil{
                     color = item.calendar!.color
                 }
 
