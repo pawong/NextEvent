@@ -24,7 +24,7 @@
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>LSUIElement</key>
 	<true/>
-	<key>NSCalendarsUsageDescription</key>
+	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs Calendar access to display events in list</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2013-2021 Mazookie. All rights reserved.</string>
@@ -32,7 +32,7 @@
 	<string>Main</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>NSRemindersUsageDescription</key>
+	<key>NSRemindersFullAccessUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs Reminder access to display reminders in list</string>
 </dict>
 </plist>

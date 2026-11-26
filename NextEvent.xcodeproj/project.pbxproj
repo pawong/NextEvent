@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -23,6 +23,16 @@
 		13C21D8820332B5A00821F7C /* NextEventPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C21D8720332B5A00821F7C /* NextEventPreferencesViewController.swift */; };
 		13C21D8A20332B8C00821F7C /* NextEventPreferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13C21D8920332B8C00821F7C /* NextEventPreferences.storyboard */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EAFC292330B89EC8004362BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 139B32CA201E8A99007A5909 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 139B32D1201E8A9A007A5909;
+			remoteInfo = NextEvent;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		139B7B6A20452BD500190740 /* CopyFiles */ = {
@@ -56,10 +66,22 @@
 		139B3301201EA9FE007A5909 /* NextEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextEventViewController.swift; sourceTree = "<group>"; };
 		13C21D8720332B5A00821F7C /* NextEventPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextEventPreferencesViewController.swift; sourceTree = "<group>"; };
 		13C21D8920332B8C00821F7C /* NextEventPreferences.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NextEventPreferences.storyboard; sourceTree = "<group>"; };
+		EAFC291C30B89EC8004362BC /* NextEventTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NextEventTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		EAFC291D30B89EC8004362BC /* NextEventTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = NextEventTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		139B32CF201E8A9A007A5909 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EAFC291930B89EC8004362BC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -73,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				139B32D4201E8A9A007A5909 /* NextEvent */,
+				EAFC291D30B89EC8004362BC /* NextEventTests */,
 				139B32D3201E8A9A007A5909 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -81,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				139B32D2201E8A9A007A5909 /* NextEvent.app */,
+				EAFC291C30B89EC8004362BC /* NextEventTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -131,20 +155,47 @@
 			productReference = 139B32D2201E8A9A007A5909 /* NextEvent.app */;
 			productType = "com.apple.product-type.application";
 		};
+		EAFC291B30B89EC8004362BC /* NextEventTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EAFC292230B89EC8004362BC /* Build configuration list for PBXNativeTarget "NextEventTests" */;
+			buildPhases = (
+				EAFC291830B89EC8004362BC /* Sources */,
+				EAFC291930B89EC8004362BC /* Frameworks */,
+				EAFC291A30B89EC8004362BC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EAFC292430B89EC8004362BC /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				EAFC291D30B89EC8004362BC /* NextEventTests */,
+			);
+			name = NextEventTests;
+			packageProductDependencies = (
+			);
+			productName = NextEventTests;
+			productReference = EAFC291C30B89EC8004362BC /* NextEventTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		139B32CA201E8A99007A5909 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 1420;
+				LastSwiftUpdateCheck = 2720;
+				LastUpgradeCheck = 2720;
 				ORGANIZATIONNAME = "Paul Wong";
 				TargetAttributes = {
 					139B32D1201E8A9A007A5909 = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 1020;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
+					};
+					EAFC291B30B89EC8004362BC = {
+						CreatedOnToolsVersion = 27.2;
+						TestTargetID = 139B32D1201E8A9A007A5909;
 					};
 				};
 			};
@@ -162,6 +213,7 @@
 			projectRoot = "";
 			targets = (
 				139B32D1201E8A9A007A5909 /* NextEvent */,
+				EAFC291B30B89EC8004362BC /* NextEventTests */,
 			);
 		};
 /* End PBXProject section */
@@ -178,6 +230,13 @@
 				1388199521569346003483C5 /* acknowledgments.txt in Resources */,
 				137B1D59202FF7F3002C9BCD /* MZAboutBox.storyboard in Resources */,
 				13C21D8A20332B8C00821F7C /* NextEventPreferences.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EAFC291A30B89EC8004362BC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,7 +258,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EAFC291830B89EC8004362BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EAFC292430B89EC8004362BC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 139B32D1201E8A9A007A5909 /* NextEvent */;
+			targetProxy = EAFC292330B89EC8004362BC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		139B32E0201E8A9A007A5909 /* Debug */ = {
@@ -234,7 +308,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -254,7 +328,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -297,7 +371,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -311,11 +385,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "NextEvent/NextEvent-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 			};
 			name = Release;
@@ -327,20 +402,22 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = NextEvent/NextEvent.entitlements;
 				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 30;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = G7Y6J5C2S2;
 				INFOPLIST_FILE = NextEvent/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = NextEvent;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 2.2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Mazookie.NextEvent;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -351,20 +428,84 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = NextEvent/NextEvent.entitlements;
 				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 30;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = G7Y6J5C2S2;
 				INFOPLIST_FILE = NextEvent/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = NextEvent;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 2.2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Mazookie.NextEvent;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		EAFC292030B89EC8004362BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Mazookie.NextEventTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NextEvent.app/Contents/MacOS/NextEvent";
+			};
+			name = Debug;
+		};
+		EAFC292130B89EC8004362BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Mazookie.NextEventTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NextEvent.app/Contents/MacOS/NextEvent";
 			};
 			name = Release;
 		};
@@ -385,6 +526,15 @@
 			buildConfigurations = (
 				139B32E3201E8A9A007A5909 /* Debug */,
 				139B32E4201E8A9A007A5909 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EAFC292230B89EC8004362BC /* Build configuration list for PBXNativeTarget "NextEventTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EAFC292030B89EC8004362BC /* Debug */,
+				EAFC292130B89EC8004362BC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

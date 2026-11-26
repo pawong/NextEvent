@@ -356,62 +356,12 @@ class CalendarTools: NSObject {
         return NSColor.clear
     }
     
-    // currently not working not sure why, moved to appDelegate
-    func registerNotification(_ selector: Selector) {
-        eventStore.requestAccess(to: .event, completion: {
-            (_ granted: Bool, _ error: Error?) -> Void in
-            if granted {
-                NotificationCenter.default.addObserver(
-                    self,
-                    selector: selector,
-                    name: .EKEventStoreChanged,
-                    object: nil
-                )
-            }
-        })
-        eventStore.requestAccess(to: .reminder, completion: {
-            (_ granted: Bool, _ error: Error?) -> Void in
-            if granted {
-                NotificationCenter.default.addObserver(
-                    self,
-                    selector: selector,
-                    name: .EKEventStoreChanged,
-                    object: nil
-                )
-            }
-        })
-    }
-
+    /// Fires the calendar and reminder access requests.
+    /// Note: the requests complete asynchronously, so this always returns true
+    /// (same as the previous behavior, where the result was set after returning).
     func requestAccess() -> Bool {
-        var result = true
-        eventStore.requestAccess(to: EKEntityType.event, completion: {
-            (accessGranted: Bool, error: Error?) in
-
-            if accessGranted == true {
-                DispatchQueue.main.async(execute: {
-                    // access granted
-                })
-            } else {
-                DispatchQueue.main.async(execute: {
-                    // access denied
-                    result = false
-                })
-            }
-        })
-        eventStore.requestAccess(to: EKEntityType.reminder, completion: {
-            (accessGranted: Bool, error: Error?) in
-
-            if accessGranted == true {
-                DispatchQueue.main.async(execute: {
-                    // access granted
-                })
-            } else {
-                DispatchQueue.main.async(execute: {
-                    // access denied
-                    result = false
-                })
-            }
-        })
-        return result
+        eventStore.requestFullAccessToEvents(completion: { _, _ in })
+        eventStore.requestFullAccessToReminders(completion: { _, _ in })
+        return true
     }
 }

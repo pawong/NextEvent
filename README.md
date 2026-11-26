@@ -23,6 +23,26 @@ NextEvent is a countdown widget for your Mac menu bar. It displays the time unti
 >    Changes:
 >    - First Open Source Release
 
+## Installing
+
+NextEvent is signed to run locally but is not notarized by Apple, so macOS will block it the first time you open it.
+
+1. Download and unzip `NextEvent.zip`, then move `NextEvent.app` to your Applications folder.
+2. Open the app. When macOS says it can't verify the developer, click **Done**.
+3. Go to **System Settings > Privacy & Security**, scroll down, and click **Open Anyway** next to the NextEvent message.
+4. Confirm with your password. After this, NextEvent opens normally.
+
+Or, from Terminal:
+
+```sh
+xattr -cr /Applications/NextEvent.app
+```
+
+On first launch, allow NextEvent access to your calendars and reminders.
+
+## Building
+
+Open `NextEvent.xcodeproj` in Xcode and build. No Apple developer account or team is required; the app is signed to run locally.
 
 
 ## Support
