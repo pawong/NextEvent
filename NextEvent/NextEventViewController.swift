@@ -8,6 +8,7 @@
 
 import Cocoa
 import EventKit
+import UserNotifications
 
 
 extension Date {
@@ -340,9 +341,21 @@ class NextEventViewController: NSViewController {
         
     }
 
-    func notify() {
-        var notification: NSUserNotification?
+    /// Posts an immediate user notification via UserNotifications.
+    func postNotification(title: String, body: String, sound: Bool) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = sound ? .default : nil
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: nil
+        )
+        UNUserNotificationCenter.current().add(request)
+    }
 
+    func notify() {
         if settings.settings.useSystemAlert || settings.settings.useBlockingAlert {
 
             for item in calendarItems {
@@ -368,18 +381,11 @@ class NextEventViewController: NSViewController {
                         let tt = ceil((itemDate!.addingTimeInterval(0-travelTime)).timeIntervalSinceReferenceDate)
                         if ceil(now.timeIntervalSinceReferenceDate) == tt {
                             if settings.settings.useSystemAlert {
-                                notification = NSUserNotification()
-                                notification?.title = "Time to leave for \(item.title ?? "Next Event")"
-                                notification?.informativeText = "\(itemDate!.description(with: .current))"
-                                notification?.deliveryDate = now
-                                // play sound
-                                if settings.settings.useSound {
-                                    notification?.soundName = NSUserNotificationDefaultSoundName
-                                } else {
-                                    notification?.soundName = nil
-                                }
-                                let center = NSUserNotificationCenter.default
-                                center.scheduleNotification(notification!)
+                                postNotification(
+                                    title: "Time to leave for \(item.title ?? "Next Event")",
+                                    body: "\(itemDate!.description(with: .current))",
+                                    sound: settings.settings.useSound
+                                )
                             } else if settings.settings.useSound {
                                 NSSound.beep()
                             }
@@ -398,18 +404,11 @@ class NextEventViewController: NSViewController {
                 if ceil(now.timeIntervalSinceReferenceDate) == ceil(itemDate!.timeIntervalSinceReferenceDate) {
                     
                     if settings.settings.useSystemAlert {
-                        notification = NSUserNotification()
-                        notification?.title = item.title
-                        notification?.informativeText = "\(itemDate!.description(with: .current))"
-                        notification?.deliveryDate = now
-                        // play sound
-                        if settings.settings.useSound {
-                            notification?.soundName = NSUserNotificationDefaultSoundName
-                        } else {
-                            notification?.soundName = nil
-                        }
-                        let center = NSUserNotificationCenter.default
-                        center.scheduleNotification(notification!)
+                        postNotification(
+                            title: item.title,
+                            body: "\(itemDate!.description(with: .current))",
+                            sound: settings.settings.useSound
+                        )
                     } else if settings.settings.useSound {
                         NSSound.beep()
                     }
@@ -467,11 +466,18 @@ class NextEventViewController: NSViewController {
     }
 
     @IBAction func launchCalendar(_ sender: Any) {
-        NSWorkspace.shared.launchApplication("iCal")
+        launchApp(bundleIdentifier: "com.apple.iCal")
     }
 
     @IBAction func launchReminders(_ sender: Any) {
-        NSWorkspace.shared.launchApplication("Reminders")
+        launchApp(bundleIdentifier: "com.apple.reminders")
+    }
+
+    private func launchApp(bundleIdentifier: String) {
+        guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleIdentifier) else {
+            return
+        }
+        NSWorkspace.shared.openApplication(at: url, configuration: NSWorkspace.OpenConfiguration())
     }
 }
 

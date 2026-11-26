@@ -21,8 +21,8 @@ class TimeStringTools: NSObject {
     let ONE_QUARTER    =  " and a quarter"
     let ONE_THIRD      =  " and a third"
     let ONE_HALF       =  " and a half"
-    let TWO_THIRDS     =  " and two third"
-    let THREE_QUARTERS =  " and three quarter"
+    let TWO_THIRDS     =  " and two thirds"
+    let THREE_QUARTERS =  " and three quarters"
     let NADA           =  ""
 
     func getExtraBits(_ theWhole: Double) -> String {
@@ -228,6 +228,13 @@ class TimeStringTools: NSObject {
         var theFuzzyBits: String
         let formatter = NumberFormatter()
         formatter.numberStyle = .spellOut
+        // the surrounding text is English, so spell numbers out in English too
+        formatter.locale = Locale(identifier: "en_US")
+
+        // spell out only the whole part; the fraction is described by getExtraBits
+        func spellOut(_ value: Double) -> String {
+            return formatter.string(from: NSNumber(value: Int(value))) ?? "\(Int(value))"
+        }
 
         theWhole = seconds / YEAR_SECONDS
         if theWhole >= 1 {
@@ -235,7 +242,7 @@ class TimeStringTools: NSObject {
             if theWhole < 2 && (theFuzzyBits == NADA) {
                 return "next year"
             }
-            return "\(String(describing: formatter.string(from: NSNumber(value: theWhole))))\(theFuzzyBits) years"
+            return "\(spellOut(theWhole))\(theFuzzyBits) years"
         }
         theWhole = seconds / MONTH_SECONDS
         if theWhole >= 1 {
@@ -243,7 +250,7 @@ class TimeStringTools: NSObject {
             if theWhole < 2 && (theFuzzyBits == NADA) {
                 return "next month"
             }
-            return "\(String(describing: formatter.string(from: NSNumber(value: theWhole))))\(theFuzzyBits) months"
+            return "\(spellOut(theWhole))\(theFuzzyBits) months"
         }
         theWhole = Double(seconds / WEEK_SECONDS)
         if theWhole >= 1 {
@@ -251,7 +258,7 @@ class TimeStringTools: NSObject {
             if theWhole < 2 && (theFuzzyBits == NADA) {
                 return "next week"
             }
-            return "\(String(describing: formatter.string(from: NSNumber(value: theWhole))))\(theFuzzyBits) weeks"
+            return "\(spellOut(theWhole))\(theFuzzyBits) weeks"
         }
         theWhole = seconds / DAY_SECONDS
         if theWhole >= 1 {
@@ -259,7 +266,7 @@ class TimeStringTools: NSObject {
             if theWhole < 2 && (theFuzzyBits == NADA) {
                 return "tomorrow"
             }
-            return "\(String(describing: formatter.string(from: NSNumber(value: theWhole))))\(theFuzzyBits) days"
+            return "\(spellOut(theWhole))\(theFuzzyBits) days"
         }
         theWhole = seconds / HOUR_SECONDS
         if theWhole >= 1 {
@@ -267,20 +274,20 @@ class TimeStringTools: NSObject {
             if theWhole < 2 && (theFuzzyBits == NADA) {
                 return "one hour"
             }
-            return "\(String(describing: formatter.string(from: NSNumber(value: theWhole))))\(theFuzzyBits) hours"
+            return "\(spellOut(theWhole))\(theFuzzyBits) hours"
         }
         theWhole = seconds / MINUTE_SECONDS
-        if theWhole > 1 {
+        if theWhole >= 1 {
             theFuzzyBits = getExtraBits(theWhole)
             if theWhole < 2 && (theFuzzyBits == NADA) {
                 return "one minute"
             }
-            return "\(String(describing: formatter.string(from: NSNumber(value: theWhole))))\(theFuzzyBits) minutes"
+            return "\(spellOut(theWhole))\(theFuzzyBits) minutes"
         } else {
             if Int(seconds) == 1 {
                 return "one second"
             }
-            return "\(String(describing: formatter.string(from: NSNumber(value: theWhole)))) seconds"
+            return "\(spellOut(seconds)) seconds"
         }
     }
 

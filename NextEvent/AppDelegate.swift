@@ -8,10 +8,12 @@
 
 import Cocoa
 import EventKit
+import UserNotifications
 
 
-@NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+@main
+@MainActor
+class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
 
     let GLOW_INTERVAL   = 0.1
 
@@ -40,6 +42,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
+
+        // notifications: show banners even though this is a menu bar app
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+        center.requestAuthorization(options: [.alert, .sound]) { _, _ in }
 
         // load settings
         settings = Settings()
@@ -219,30 +226,35 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.performClose(sender)
     }
 
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping @Sendable (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .list, .sound])
+    }
+
     func registerNotification() {
         let eventStore = EKEventStore()
-        eventStore.requestAccess(to: .event, completion: {
-            (_ granted: Bool, _ error: Error?) -> Void in
-            if granted {
-                NotificationCenter.default.addObserver(
-                    self,
-                    selector: #selector(self.itemsChanged(_:)),
-                    name: .EKEventStoreChanged,
-                    object: nil
-                )
+        // Observers are registered once per granted permission (events, reminders),
+        // matching the previous behavior.
+        Task { @MainActor in
+            if (try? await eventStore.requestFullAccessToEvents()) == true {
+                self.addStoreObserver()
             }
-        })
-        eventStore.requestAccess(to: .reminder, completion: {
-            (_ granted: Bool, _ error: Error?) -> Void in
-            if granted {
-                NotificationCenter.default.addObserver(
-                    self,
-                    selector: #selector(self.itemsChanged(_:)),
-                    name: .EKEventStoreChanged,
-                    object: nil
-                )
+            if (try? await eventStore.requestFullAccessToReminders()) == true {
+                self.addStoreObserver()
             }
-        })
+        }
+    }
+
+    private func addStoreObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.itemsChanged(_:)),
+            name: .EKEventStoreChanged,
+            object: nil
+        )
     }
 
     func accessErrorDialog() {
