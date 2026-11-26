@@ -11,6 +11,13 @@ NextEvent is a countdown widget for your Mac menu bar. It displays the time unti
 ![](Screenshot1.png)
 
 ## Versions
+>[2.4.0](builds/NextEvent_v2.4.0/NextEvent.zip)
+>    Changes:
+>    - Events are shown in a drop-down menu instead of a popover window
+>    - Selecting an event jumps to its day in Calendar; selecting a reminder opens it in Reminders
+>    - No calendars selected no longer shows events from every calendar
+>    - Fixed a crash reading some reminders that stopped the event list from loading
+
 >[2.3.1](builds/NextEvent_v2.3.1/NextEvent.zip)
 >    Changes:
 >    - Requires macOS 26 or later
@@ -45,7 +52,7 @@ Or, from Terminal:
 xattr -cr /Applications/NextEvent.app
 ```
 
-On first launch, allow NextEvent access to your calendars and reminders.
+On first launch, allow NextEvent access to your calendars and reminders. The first time you select an event, allow NextEvent to control Calendar so it can jump to the event.
 
 ## Building
 

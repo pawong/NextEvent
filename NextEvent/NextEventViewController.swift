@@ -33,58 +33,18 @@ extension Date {
     }
 }
 
-class KSTableCellView: NSTableCellView {
+/// Loads calendar items, drives notifications, and builds the drop-down
+/// menu shown when the status item is clicked.
+@MainActor
+class NextEventViewController: NSObject {
 
-    @IBOutlet weak var eventTitle: NSTextField!
-    @IBOutlet weak var eventDate: NSTextField!
-    @IBOutlet weak var eventLocation: NSTextField!
-    @IBOutlet weak var eventTime: NSTextField!
-    @IBOutlet weak var calendarColor: NSTextField!
-    @IBOutlet weak var leadTime: NSTextField!
-    @IBOutlet weak var leadTimeUnit: NSTextField!
-}
-
-class NextEventViewController: NSViewController {
-
-    @IBOutlet var controllerView: NSView!
-    @IBOutlet weak var scrollView: NSScrollView!
-    @IBOutlet weak var tableView: NSTableView!
     var calendarItems: [EKCalendarItem] = []
     var settings: Settings!
     var shouldGlow: Bool = false
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do view setup here.
-        let appDelegate = NSApp.delegate as? AppDelegate
-        settings = appDelegate?.settings
-
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-
-        self.refreshAll(self)
-    }
-
-    //override func viewWillAppear() {
-    //    super.viewWillAppear()
-    //    self.refreshAll(self)
-    //}
-    
-    func setControllerViewSize(_ count: Int) {
-        var final_count = count
-
-        if final_count < 1 {
-            final_count = 10
-        }
-
-        DispatchQueue.main.async { [weak self] in
-            var cf: NSRect = (self?.controllerView.frame)!
-            cf.size.height = CGFloat(82 * final_count + 38)
-            self?.controllerView.frame = cf
-            self?.view.window?.setContentSize(cf.size)
-            let appDelegate = NSApp.delegate as? AppDelegate
-            appDelegate?.popover.contentSize = cf.size
-        }
+    init(settings: Settings) {
+        self.settings = settings
+        super.init()
     }
 
     func getDateFromEventItem(_ item: EKCalendarItem) -> Date? {
@@ -105,19 +65,11 @@ class NextEventViewController: NSViewController {
         if type_name == "EKEvent" {
             location = (item as! EKEvent).location ?? "   "
         } else if type_name == "EKReminder" {
-            let reminder = (item as! EKReminder)
-            if reminder.hasAlarms {
-                for alarm in reminder.alarms! {
-                    let firstLocation = alarm.structuredLocation?.title
-                    if firstLocation != nil {
-                        location = firstLocation!
-                        break;
-                    }
-                }
-            } else {
-                location = reminder.location ?? "   "
-            }
-            
+            // Don't read the reminder's alarms (where location-based reminders
+            // keep their place): EventKit can throw an Objective-C exception
+            // ("-[__NSSetM addObject:]: object cannot be nil") building that list,
+            // which Swift can't catch.
+            location = (item as! EKReminder).location ?? "   "
         }
         return location
     }
@@ -259,30 +211,9 @@ class NextEventViewController: NSViewController {
         return statusString
     }
 
-    @IBAction func openHelp(_ sender: Any?) {
-        let appDelegate = NSApp.delegate as? AppDelegate
-        appDelegate?.openHelp(Any?.self)
-    }
-
-    @IBAction func openNextEventPreferencePanel(_ sender: Any?) {
-        let appDelegate = NSApp.delegate as? AppDelegate
-        appDelegate?.openNextEventPreferencePanel(Any?.self)
-    }
-
     func update() -> Bool {
         var has_changed: Bool = false
 
-        if self.view.window?.occlusionState.contains(.visible) ?? false  {
-            if settings.needsDisplay == true {
-
-                self.refreshAll(self)
-
-                settings.needsDisplay = false
-                has_changed = true
-            } else {
-                tableView.reloadData()
-            }
-        }
         if settings.needsDisplay == true {
 
             self.refreshAll(self)
@@ -458,11 +389,6 @@ class NextEventViewController: NSViewController {
                 reminders: reminderLists
             )
         }
-        
-        self.setControllerViewSize(calendarItems.count)
-        DispatchQueue.main.async { [weak self] in
-            self?.tableView.reloadData()
-        }
     }
 
     @IBAction func launchCalendar(_ sender: Any) {
@@ -482,98 +408,249 @@ class NextEventViewController: NSViewController {
 }
 
 extension NextEventViewController {
-    static func freshController() -> NextEventViewController {
-        let storyboard = NSStoryboard(name: "Main", bundle: nil)
-        let identifier = "NextEventViewController"
 
-        guard let viewcontroller = storyboard.instantiateController(withIdentifier: identifier) as? NextEventViewController else {
-            fatalError("Why can't i find NextEventViewController? - Check Main.storyboard")
+    /// Rebuilds the drop-down menu: one item per calendar item, followed by the
+    /// app actions that used to live in the popover's gear menu.
+    func populateMenu(_ menu: NSMenu) {
+        menu.removeAllItems()
+
+        if calendarItems.isEmpty {
+            let emptyItem = NSMenuItem(title: "No upcoming events", action: nil, keyEquivalent: "")
+            emptyItem.isEnabled = false
+            menu.addItem(emptyItem)
         }
-        return viewcontroller
+        for item in calendarItems {
+            // the "N/A" placeholder CalendarTools adds when nothing is found has
+            // no date, so it gets a plain line rather than the lead time box
+            if getDateFromEventItem(item) == nil {
+                let placeholderItem = NSMenuItem(title: item.title ?? "N/A", action: nil, keyEquivalent: "")
+                placeholderItem.isEnabled = false
+                menu.addItem(placeholderItem)
+                continue
+            }
+            let menuItem = NSMenuItem(title: item.title ?? "", action: #selector(openCalendarItem(_:)), keyEquivalent: "")
+            menuItem.target = self
+            menuItem.representedObject = item
+            menuItem.attributedTitle = attributedTitle(for: item)
+            menuItem.image = leadTimeImage(for: item)
+            menu.addItem(menuItem)
+        }
+
+        menu.addItem(NSMenuItem.separator())
+        let calendarItem = NSMenuItem(title: "Open Calendar", action: #selector(launchCalendar(_:)), keyEquivalent: "")
+        calendarItem.target = self
+        calendarItem.image = NSImage(named: "calendar_button")
+        menu.addItem(calendarItem)
+        let remindersItem = NSMenuItem(title: "Open Reminders", action: #selector(launchReminders(_:)), keyEquivalent: "")
+        remindersItem.target = self
+        remindersItem.image = NSImage(named: "reminder_button")
+        menu.addItem(remindersItem)
+
+        menu.addItem(NSMenuItem.separator())
+        let appDelegate = NSApp.delegate as? AppDelegate
+        for (title, action) in [
+            ("Refresh", #selector(AppDelegate.refreshAll(_:))),
+            ("Preferences...", #selector(AppDelegate.openNextEventPreferencePanel(_:))),
+            ("Help...", #selector(AppDelegate.openHelp(_:))),
+        ] {
+            let actionItem = NSMenuItem(title: title, action: action, keyEquivalent: "")
+            actionItem.target = appDelegate
+            menu.addItem(actionItem)
+        }
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
     }
-}
 
-extension NextEventViewController: NSTableViewDataSource, NSTableViewDelegate {
-
-    func numberOfRows(in tableView: NSTableView) -> Int {
-        return calendarItems.count
+    /// Refreshes the countdowns of an open menu in place, so it stays live
+    /// while the user is looking at it.
+    func refreshMenuTitles(_ menu: NSMenu) {
+        for menuItem in menu.items {
+            if let item = menuItem.representedObject as? EKCalendarItem {
+                menuItem.attributedTitle = attributedTitle(for: item)
+                menuItem.image = leadTimeImage(for: item)
+            }
+        }
     }
 
-    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let result:KSTableCellView = tableView.makeView(
-            withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "defaultColumn"),
-            owner: self
-        ) as! KSTableCellView
+    /// Tile shown on the left of each menu item: the large lead time number with
+    /// its unit underneath, topped by a strip in the calendar's color.
+    func leadTimeImage(for item: EKCalendarItem) -> NSImage {
+        let itemDate: Date? = getDateFromEventItem(item)
+        let isPast = itemDate == nil || itemDate! < Date()
+        let (leadTime, leadTimeUnit) = getLeadTimeStrings(itemDate)
+        let calendarColor = item.calendar?.color ?? NSColor.white
 
-        let copyCalendarItems = calendarItems
-        if copyCalendarItems.count - 1 < row {
-            return result
+        let size = NSSize(width: 52, height: 44)
+        // drawn lazily so the system colors resolve for the current appearance
+        return NSImage(size: size, flipped: true) { rect in
+            let tile = NSBezierPath(roundedRect: rect.insetBy(dx: 0.5, dy: 0.5), xRadius: 4, yRadius: 4)
+            NSColor.separatorColor.setStroke()
+            tile.stroke()
+
+            NSGraphicsContext.saveGraphicsState()
+            tile.addClip()
+            calendarColor.setFill()
+            NSRect(x: 0, y: 0, width: rect.width, height: 4).fill()
+            NSGraphicsContext.restoreGraphicsState()
+
+            let paragraph = NSMutableParagraphStyle()
+            paragraph.alignment = .center
+            let textColor = isPast ? NSColor.secondaryLabelColor : NSColor.labelColor
+            leadTime.draw(
+                in: NSRect(x: 0, y: 4, width: rect.width, height: 26),
+                withAttributes: [
+                    .font: NSFont(name: "Helvetica Neue", size: 22) ?? NSFont.systemFont(ofSize: 22),
+                    .foregroundColor: textColor,
+                    .paragraphStyle: paragraph,
+                ]
+            )
+            leadTimeUnit.draw(
+                in: NSRect(x: 0, y: 29, width: rect.width, height: 12),
+                withAttributes: [
+                    .font: NSFont(name: "Helvetica Neue", size: 9) ?? NSFont.systemFont(ofSize: 9),
+                    .foregroundColor: textColor,
+                    .paragraphStyle: paragraph,
+                ]
+            )
+            return true
         }
+    }
 
-        let now = Date()
-        let itemDate: Date? = getDateFromEventItem(copyCalendarItems[row])
-        let travelTime = getTravelTimeFromEventItem(copyCalendarItems[row])
-        let itemLocation: String = getLocationFromEventItem(copyCalendarItems[row])
-        let allDay = isAllDay(copyCalendarItems[row])
+    /// Two-line menu title: the title, then the date, time remaining, and
+    /// location. Past items are dimmed.
+    func attributedTitle(for item: EKCalendarItem) -> NSAttributedString {
+        let itemDate: Date? = getDateFromEventItem(item)
+        let isPast = itemDate == nil || itemDate! < Date()
+        let primaryColor = isPast ? NSColor.secondaryLabelColor : NSColor.labelColor
 
-        if itemDate == nil || itemDate! < now {
-            result.eventTitle.textColor = NSColor.lightGray
-            result.eventLocation.textColor = NSColor.lightGray
-            result.eventDate.textColor = NSColor.lightGray
-            result.eventTime.textColor = NSColor.lightGray
-            result.leadTime.textColor = NSColor.lightGray
-            result.leadTimeUnit.textColor = NSColor.lightGray
-        } else {
-            result.eventTitle.textColor = result.calendarColor.textColor
-            result.eventLocation.textColor = result.calendarColor.textColor
-            result.eventDate.textColor = result.calendarColor.textColor
-            result.eventTime.textColor = result.calendarColor.textColor
-            result.leadTime.textColor = result.calendarColor.textColor
-            result.leadTimeUnit.textColor = result.calendarColor.textColor
+        let titleFont = NSFont.menuFont(ofSize: 0)
+        let detailFont = NSFont.menuFont(ofSize: NSFont.smallSystemFontSize)
+
+        // Fixed line heights make the text exactly as tall as the lead time tile
+        // (18 + 13 + 13 = 44), so the title sits at the top instead of the menu
+        // centering a shorter block of text against the tile.
+        func lineStyle(height: CGFloat) -> NSParagraphStyle {
+            let style = NSMutableParagraphStyle()
+            style.minimumLineHeight = height
+            style.maximumLineHeight = height
+            style.lineBreakMode = .byTruncatingTail
+            return style
         }
-        result.eventTitle.stringValue = copyCalendarItems[row].title!
-        result.eventLocation.stringValue = itemLocation
-        if (itemDate == nil) {
-            result.eventTime.stringValue = "   "
-            result.eventDate.stringValue = "   "
-            result.leadTime.stringValue = "   "
-            result.leadTimeUnit.stringValue = "   "
-        } else {
-            result.eventTime.stringValue = getTimeString(itemDate)
-            if allDay {
-                result.eventDate.stringValue = DateFormatter.localizedString(
-                    from: itemDate!,
-                    dateStyle: .short,
-                    timeStyle: .none
-                ) + ", All Day"
-            } else {
-                result.eventDate.stringValue = DateFormatter.localizedString(
-                    from: itemDate!,
-                    dateStyle: .short,
-                    timeStyle: .short
+        let detailAttributes: [NSAttributedString.Key: Any] = [
+            .font: detailFont,
+            .foregroundColor: NSColor.secondaryLabelColor,
+            .paragraphStyle: lineStyle(height: 13),
+        ]
+
+        let result = NSMutableAttributedString()
+        result.append(NSAttributedString(
+            string: item.title ?? "",
+            attributes: [
+                .font: NSFontManager.shared.convert(titleFont, toHaveTrait: .boldFontMask),
+                .foregroundColor: primaryColor,
+                .paragraphStyle: lineStyle(height: 18),
+            ]
+        ))
+
+        // second line: date and time remaining
+        var dateLine = ""
+        if let itemDate = itemDate {
+            dateLine = DateFormatter.localizedString(
+                from: itemDate,
+                dateStyle: .short,
+                timeStyle: isAllDay(item) ? .none : .short
+            )
+            if isAllDay(item) {
+                dateLine += ", All Day"
+            }
+            let travelTime = getTravelTimeFromEventItem(item)
+            if travelTime != 0 {
+                dateLine += ", TT +" + TimeStringTools().getTimeStringFromSeconds(
+                    travelTime,
+                    showSeconds: false,
+                    leadingZeros: false
                 )
             }
-            if travelTime != 0 {
-                result.eventDate.stringValue =
-                    result.eventDate.stringValue +
-                    ", TT +" +
-                    TimeStringTools().getTimeStringFromSeconds(
-                        travelTime,
-                        showSeconds: false,
-                        leadingZeros: false
-                    )
+            if !isPast {
+                dateLine += "  ·  in " + getTimeString(itemDate)
             }
-            (result.leadTime.stringValue, result.leadTimeUnit.stringValue) = getLeadTimeStrings(itemDate)
         }
+        result.append(NSAttributedString(string: "\n" + dateLine, attributes: detailAttributes))
 
-        //print(copyCalendarItems[row])
-        
-        if copyCalendarItems[row].calendar != nil {
-            result.calendarColor.backgroundColor = copyCalendarItems[row].calendar.color
-        } else {
-            result.calendarColor.backgroundColor = NSColor.white
+        // third line: location, kept even when empty so every item is the same height
+        let location = getLocationFromEventItem(item)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "\n", with: ", ")
+        // a non-breaking space stops an empty last line from collapsing
+        result.append(NSAttributedString(
+            string: "\n" + (location.isEmpty ? "\u{00A0}" : location),
+            attributes: detailAttributes
+        ))
+        return result
+    }
+
+    /// Opens the selected event in Calendar or reminder in Reminders. Falls
+    /// back to just launching the app if a link to the item can't be built.
+    @objc func openCalendarItem(_ sender: NSMenuItem) {
+        if let reminder = sender.representedObject as? EKReminder {
+            if let url = URL(string: "x-apple-reminderkit://REMCDReminder/\(reminder.calendarItemIdentifier)"),
+               NSWorkspace.shared.open(url) {
+                return
+            }
+            launchReminders(sender)
+        } else if let event = sender.representedObject as? EKEvent {
+            showInCalendar(event)
         }
+    }
 
-        return result;
+    /// Scripts Calendar to switch to day view on the event's date and select
+    /// the event. Calendar's URL scheme opens the app but doesn't navigate.
+    func showInCalendar(_ event: EKEvent) {
+        guard let startDate = event.startDate else {
+            launchCalendar(event)
+            return
+        }
+        // AppleScript string literals need backslashes and quotes escaped
+        func quoted(_ string: String) -> String {
+            "\"" + string
+                .replacingOccurrences(of: "\\", with: "\\\\")
+                .replacingOccurrences(of: "\"", with: "\\\"") + "\""
+        }
+        let parts = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: startDate)
+        let secondsIntoDay = (parts.hour ?? 0) * 3600 + (parts.minute ?? 0) * 60
+        // the date is built field by field so it doesn't depend on the locale;
+        // day is set to 1 first so changing the month can't overflow
+        let source = """
+            set targetDate to current date
+            set day of targetDate to 1
+            set year of targetDate to \(parts.year ?? 2000)
+            set month of targetDate to \(parts.month ?? 1)
+            set day of targetDate to \(parts.day ?? 1)
+            set time of targetDate to \(secondsIntoDay)
+            tell application "Calendar"
+                activate
+                switch view to day view
+                view calendar at targetDate
+                try
+                    set matches to (every event of calendar \(quoted(event.calendar.title)) whose uid is \(quoted(event.calendarItemExternalIdentifier ?? "")))
+                    if matches is not {} then show item 1 of matches
+                end try
+            end tell
+            """
+        // selecting the event can take a moment on large calendars, so keep it
+        // off the main thread
+        DispatchQueue.global(qos: .userInitiated).async {
+            var error: NSDictionary?
+            NSAppleScript(source: source)?.executeAndReturnError(&error)
+            if let error = error {
+                print("Calendar script failed: \(error)")
+                DispatchQueue.main.async {
+                    let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.iCal")
+                    if let url = url {
+                        NSWorkspace.shared.openApplication(at: url, configuration: NSWorkspace.OpenConfiguration())
+                    }
+                }
+            }
+        }
     }
 }

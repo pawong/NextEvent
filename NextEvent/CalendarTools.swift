@@ -183,6 +183,11 @@ class CalendarTools: NSObject {
     }
 
     func getReminders(start: Date, end: Date, calendars: [EKCalendar]) -> [EKCalendarItem] {
+        // EventKit treats an empty list as "every list", so nothing selected
+        // has to be handled here
+        if calendars.isEmpty {
+            return []
+        }
         var results: [EKReminder] = []
         let predicate = eventStore.predicateForIncompleteReminders(
             withDueDateStarting: start,
@@ -204,6 +209,11 @@ class CalendarTools: NSObject {
     }
 
     func getEvents(start: Date, end: Date, calendars: [EKCalendar]) -> [EKCalendarItem] {
+        // EventKit treats an empty list as "every calendar", so nothing selected
+        // has to be handled here
+        if calendars.isEmpty {
+            return []
+        }
         var results: [EKEvent] = []
         let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: calendars)
         let events = eventStore.events(matching: predicate)

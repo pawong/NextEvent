@@ -10,5 +10,9 @@
 	<true/>
 	<key>com.apple.security.personal-information.calendars</key>
 	<true/>
+	<key>com.apple.security.temporary-exception.apple-events</key>
+	<array>
+		<string>com.apple.iCal</string>
+	</array>
 </dict>
 </plist>
