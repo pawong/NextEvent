@@ -13,14 +13,14 @@ import UserNotifications
 
 @main
 @MainActor
-class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotificationCenterDelegate {
 
     let GLOW_INTERVAL   = 0.1
 
     @IBOutlet weak var mainMenu: NSMenu!
 
     let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.variableLength)
-    let popover = NSPopover()
+    let eventMenu = NSMenu()
 
     var timer: Timer!
     var preferenceController: NSWindowController!
@@ -32,6 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     var icon: NSImage!
     var glowIcon: NSImage!
     var isGlowing: Bool = false
+    var isEventMenuOpen: Bool = false
     var yesterday: Date?
 
     var glowTimer: Timer!
@@ -51,7 +52,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         // load settings
         settings = Settings()
         self.processCommandLine()
-        viewController = NextEventViewController.freshController()
+        viewController = NextEventViewController(settings: settings)
 
         self.setIcons()
         yesterday = getMidnight(date: Date())
@@ -61,9 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         }
         statusItem.button?.menu = mainMenu
-        popover.contentViewController = viewController
-        popover.behavior = NSPopover.Behavior.transient
-        popover.animates = true
+        eventMenu.delegate = self
 
         // check for access and request notification
         if CalendarTools().requestAccess() == false {
@@ -134,6 +133,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             string: viewController.getNextEventStatus(),
             attributes: [NSAttributedString.Key.font:  NSFont(name: "Helvetica Neue", size: 13)!]
         )
+        // keep countdowns live while the drop-down is open
+        if isEventMenuOpen {
+            viewController.refreshMenuTitles(eventMenu)
+        }
         if viewController.shouldGlow {
             if !isGlowing {
                 self.startGlow()
@@ -148,7 +151,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
         if event.type == NSEvent.EventType.leftMouseUp {
             // Left button click
-            togglePopover(self)
+            showEventMenu()
         } else {
             // Right button click
             NSMenu.popUpContextMenu(sender.menu!, with: event, for: sender)
@@ -207,23 +210,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         NSApp.activate(ignoringOtherApps: true)
     }
 
-    @objc func togglePopover(_ sender: Any?) {
-        if popover.isShown {
-            closePopover(sender: sender)
-        } else {
-            showPopover(sender: sender)
-        }
+    /// Drops the event menu down from the status item. The menu is attached
+    /// only while it is shown so right-clicks still get the context menu.
+    func showEventMenu() {
+        statusItem.menu = eventMenu
+        statusItem.button?.performClick(nil)
     }
 
-    func showPopover(sender: Any?) {
-        if let button = statusItem.button {
-            NSApplication.shared.activate(ignoringOtherApps: true)
-            popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
-        }
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        viewController.populateMenu(menu)
     }
 
-    func closePopover(sender: Any?) {
-        popover.performClose(sender)
+    func menuWillOpen(_ menu: NSMenu) {
+        isEventMenuOpen = true
+    }
+
+    func menuDidClose(_ menu: NSMenu) {
+        isEventMenuOpen = false
+        statusItem.menu = nil
     }
 
     nonisolated func userNotificationCenter(
