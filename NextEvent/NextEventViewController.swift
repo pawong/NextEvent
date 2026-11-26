@@ -433,6 +433,11 @@ extension NextEventViewController {
             menuItem.representedObject = item
             menuItem.attributedTitle = attributedTitle(for: item)
             menuItem.image = leadTimeImage(for: item)
+            // macOS 27 hides menu item images by default; the lead time box
+            // carries the countdown and calendar color, so always show it
+            if #available(macOS 27.0, *) {
+                menuItem.preferredImageVisibility = .visible
+            }
             menu.addItem(menuItem)
         }
 
