@@ -162,7 +162,15 @@ extension NextEventPreferencesViewController: NSTableViewDataSource, NSTableView
                 withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "Check")
                 , owner: self
             ) as! NSButton
-            (result.cell as! NSButtonCell).backgroundColor = allCalendars[row].color
+            // system checkboxes can't be tinted per item, so draw them in the
+            // calendar's color, matching the Calendar and Reminders sidebars
+            let color = allCalendars[row].color ?? .controlAccentColor
+            result.setButtonType(.toggle)
+            result.isBordered = false
+            result.image = checkboxImage(color: color, checked: false)
+            result.alternateImage = checkboxImage(color: color, checked: true)
+            result.setAccessibilityRole(.checkBox)
+            result.setAccessibilityLabel(allCalendars[row].title)
             if calendars.contains(allCalendars[row].title) {
                 result.state = .on
             } else {
@@ -180,4 +188,29 @@ extension NextEventPreferencesViewController: NSTableViewDataSource, NSTableView
         return nil
     }
 
+    /// Draws a rounded checkbox in the given color: outlined when off,
+    /// filled with a white checkmark when on.
+    func checkboxImage(color: NSColor, checked: Bool) -> NSImage {
+        return NSImage(size: NSSize(width: 14, height: 14), flipped: true) { bounds in
+            let box = NSBezierPath(roundedRect: bounds.insetBy(dx: 1, dy: 1), xRadius: 3.5, yRadius: 3.5)
+            color.setFill()
+            color.setStroke()
+            if checked {
+                box.fill()
+                let check = NSBezierPath()
+                check.move(to: NSPoint(x: 3.5, y: 7.5))
+                check.line(to: NSPoint(x: 6, y: 10))
+                check.line(to: NSPoint(x: 10.5, y: 4))
+                check.lineWidth = 2
+                check.lineCapStyle = .round
+                check.lineJoinStyle = .round
+                NSColor.white.setStroke()
+                check.stroke()
+            } else {
+                box.lineWidth = 1.5
+                box.stroke()
+            }
+            return true
+        }
+    }
 }

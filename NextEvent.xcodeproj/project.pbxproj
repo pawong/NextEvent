@@ -144,6 +144,7 @@
 				139B32CE201E8A9A007A5909 /* Sources */,
 				139B32CF201E8A9A007A5909 /* Frameworks */,
 				139B32D0201E8A9A007A5909 /* Resources */,
+				EAFC292530B89EC8004362BC /* Set Build Number */,
 				139B7B6A20452BD500190740 /* CopyFiles */,
 			);
 			buildRules = (
@@ -241,6 +242,29 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		EAFC292530B89EC8004362BC /* Set Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "Set Build Number";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Use the short git hash as the build number (CFBundleVersion).\n# Falls back to CURRENT_PROJECT_VERSION when not building from a git checkout.\nif hash=$(git -C \"$SRCROOT\" rev-parse --short HEAD 2>/dev/null); then\n    /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $hash\" \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		139B32CE201E8A9A007A5909 /* Sources */ = {
@@ -414,7 +438,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 2.2.4;
+				MARKETING_VERSION = 2.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Mazookie.NextEvent;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 6.0;
@@ -440,7 +464,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 2.2.4;
+				MARKETING_VERSION = 2.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Mazookie.NextEvent;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 6.0;

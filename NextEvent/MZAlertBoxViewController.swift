@@ -53,19 +53,49 @@ class MZAlertBoxViewController: NSViewController {
         }
     }
     
-    func resizeWindow(){
-        let screenSize = NSScreen.main!.frame
-        let percent = CGFloat(0.85)
-        self.view.window?.setFrame(NSRect(x:0,y:0,width:screenSize.size.width * percent,height:screenSize.size.height * percent), display: true)
-         self.view.window?.center()
+    /// Makes the alert cover the whole screen below the menu bar (and notch), so
+    /// nothing at the top is hidden. Before the window is shown, use the screen the
+    /// user is working on; afterwards, whichever screen the window is on.
+    func resizeWindow(to screen: NSScreen? = nil) {
+        guard let window = self.view.window,
+              let screen = screen ?? window.screen ?? NSScreen.main else { return }
+        var frame = screen.frame
+        // visibleFrame's top edge sits just below the menu bar; the Dock is
+        // still covered because the other edges come from the full frame
+        frame.size.height = screen.visibleFrame.maxY - frame.minY
+        window.setFrame(frame, display: true)
     }
-    
+
+    @objc func screenChanged(_ notification: Notification) {
+        self.resizeWindow()
+    }
+
     override func viewWillAppear() {
         super.viewWillAppear()
         self.view.window?.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.mainMenuWindow)))
         self.view.window?.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         
-        self.resizeWindow()
+        self.resizeWindow(to: NSScreen.main)
+
+        // refit when the window moves to another display, or displays are
+        // added, removed, or change resolution
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(screenChanged(_:)),
+            name: NSWindow.didChangeScreenNotification,
+            object: self.view.window
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(screenChanged(_:)),
+            name: NSApplication.didChangeScreenParametersNotification,
+            object: nil
+        )
+    }
+
+    override func viewWillDisappear() {
+        super.viewWillDisappear()
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidAppear() {
