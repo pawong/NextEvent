@@ -449,6 +449,11 @@ extension NextEventViewController {
         let remindersItem = NSMenuItem(title: "Open Reminders", action: #selector(launchReminders(_:)), keyEquivalent: "")
         remindersItem.target = self
         remindersItem.image = NSImage(named: "reminder_button")
+        // macOS 27 hides menu item images by default; keep the app icons
+        if #available(macOS 27.0, *) {
+            calendarItem.preferredImageVisibility = .visible
+            remindersItem.preferredImageVisibility = .visible
+        }
         menu.addItem(remindersItem)
 
         menu.addItem(NSMenuItem.separator())
@@ -456,6 +461,7 @@ extension NextEventViewController {
         for (title, action) in [
             ("Refresh", #selector(AppDelegate.refreshAll(_:))),
             ("Preferences...", #selector(AppDelegate.openNextEventPreferencePanel(_:))),
+            ("About...", #selector(AppDelegate.openAbout(_:))),
             ("Help...", #selector(AppDelegate.openHelp(_:))),
         ] {
             let actionItem = NSMenuItem(title: title, action: action, keyEquivalent: "")

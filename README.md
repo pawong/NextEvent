@@ -11,6 +11,13 @@ NextEvent is a countdown widget for your Mac menu bar. It displays the time unti
 ![](Screenshot1.png)
 
 ## Versions
+>[2.4.2](builds/NextEvent_v2.4.2/NextEvent.zip)
+>    Changes:
+>    - Calendar and Reminders icons show in the menu on macOS 27
+>    - About added to the drop-down menu
+>    - Right-click menu removed; any click opens the drop-down menu
+>    - Source Code and Help buttons centered in the About box
+
 >[2.4.1](builds/NextEvent_v2.4.1/NextEvent.zip)
 >    Changes:
 >    - Rewritten help, with getting started and troubleshooting sections
