@@ -139,9 +139,8 @@
                                     <rect key="frame" x="4" y="5" width="610" height="42"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i8b-go-565">
-                                            <rect key="frame" x="470" y="3" width="130" height="32"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i8b-go-565">
+                                            <rect key="frame" x="467" y="5" width="130" height="32"/>
                                             <buttonCell key="cell" type="push" title="Help" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="T99-KM-Cwh">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -150,9 +149,8 @@
                                                 <action selector="toggleHelp:" target="Kkt-nr-uPz" id="fWZ-Z4-Y19"/>
                                             </connections>
                                         </button>
-                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jlr-52-umi" userLabel="Source Code">
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jlr-52-umi" userLabel="Source Code">
                                             <rect key="frame" x="13" y="5" width="130" height="32"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
                                             <buttonCell key="cell" type="push" title="Source Code" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tH0-Lk-R1S" userLabel="Source Code">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -162,6 +160,14 @@
                                             </connections>
                                         </button>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="jlr-52-umi" firstAttribute="leading" secondItem="bkr-L2-VpP" secondAttribute="leading" constant="20" id="Ab1-cL-sC1"/>
+                                        <constraint firstItem="jlr-52-umi" firstAttribute="centerY" secondItem="bkr-L2-VpP" secondAttribute="centerY" id="Ab1-cY-sC2"/>
+                                        <constraint firstItem="jlr-52-umi" firstAttribute="width" constant="116" id="Ab1-wD-sC3"/>
+                                        <constraint firstAttribute="trailing" secondItem="i8b-go-565" secondAttribute="trailing" constant="20" id="Ab1-tR-hL1"/>
+                                        <constraint firstItem="i8b-go-565" firstAttribute="centerY" secondItem="bkr-L2-VpP" secondAttribute="centerY" id="Ab1-cY-hL2"/>
+                                        <constraint firstItem="i8b-go-565" firstAttribute="width" secondItem="jlr-52-umi" secondAttribute="width" id="Ab1-wD-hL3"/>
+                                    </constraints>
                                 </view>
                             </box>
                         </subviews>

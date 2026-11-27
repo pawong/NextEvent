@@ -17,8 +17,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotifi
 
     let GLOW_INTERVAL   = 0.1
 
-    @IBOutlet weak var mainMenu: NSMenu!
-
     let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.variableLength)
     let eventMenu = NSMenu()
 
@@ -57,12 +55,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotifi
         self.setIcons()
         yesterday = getMidnight(date: Date())
 
-        if let button = statusItem.button {
-            button.action = #selector(self.onClickStatusItem)
-            button.sendAction(on: [.leftMouseUp, .rightMouseUp])
-        }
-        statusItem.button?.menu = mainMenu
         eventMenu.delegate = self
+        statusItem.menu = eventMenu
 
         // check for access and request notification
         if CalendarTools().requestAccess() == false {
@@ -146,18 +140,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotifi
         }
     }
     
-    @objc func onClickStatusItem(sender: NSButton) {
-        let event = NSApp.currentEvent!
-
-        if event.type == NSEvent.EventType.leftMouseUp {
-            // Left button click
-            showEventMenu()
-        } else {
-            // Right button click
-            NSMenu.popUpContextMenu(sender.menu!, with: event, for: sender)
-        }
-    }
-
     @IBAction func refreshAll(_ sender: Any?) {
         viewController.refreshAll(self)
     }
@@ -210,13 +192,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotifi
         NSApp.activate(ignoringOtherApps: true)
     }
 
-    /// Drops the event menu down from the status item. The menu is attached
-    /// only while it is shown so right-clicks still get the context menu.
-    func showEventMenu() {
-        statusItem.menu = eventMenu
-        statusItem.button?.performClick(nil)
-    }
-
     func menuNeedsUpdate(_ menu: NSMenu) {
         viewController.populateMenu(menu)
     }
@@ -227,7 +202,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotifi
 
     func menuDidClose(_ menu: NSMenu) {
         isEventMenuOpen = false
-        statusItem.menu = nil
     }
 
     nonisolated func userNotificationCenter(

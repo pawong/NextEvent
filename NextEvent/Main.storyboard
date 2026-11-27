@@ -675,41 +675,9 @@
                     </connections>
                 </application>
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="NextEvent" customModuleProvider="target">
-                    <connections>
-                        <outlet property="mainMenu" destination="hf5-08-ydS" id="y1V-1d-BDF"/>
-                    </connections>
                 </customObject>
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-                <menu title="mainMenu" autoenablesItems="NO" id="hf5-08-ydS" userLabel="Main Menu">
-                    <items>
-                        <menuItem title="Refresh" id="oYK-1I-fhh">
-                            <modifierMask key="keyEquivalentModifierMask"/>
-                            <connections>
-                                <action selector="refreshAll:" target="Voe-Tx-rLC" id="gd5-7i-le4"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem isSeparatorItem="YES" id="QBo-Hh-cnn"/>
-                        <menuItem title="About..." id="quj-ZI-MkX" userLabel="About...">
-                            <modifierMask key="keyEquivalentModifierMask"/>
-                            <connections>
-                                <action selector="openAbout:" target="Voe-Tx-rLC" id="VnS-dE-1A5"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem title="Preferences..." id="ItL-AB-eD6">
-                            <modifierMask key="keyEquivalentModifierMask"/>
-                            <connections>
-                                <action selector="openNextEventPreferencePanel:" target="Voe-Tx-rLC" id="TDS-Ty-dBa"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem isSeparatorItem="YES" id="VG1-mO-o5Q"/>
-                        <menuItem title="Quit" keyEquivalent="q" id="Y72-EJ-SnV">
-                            <connections>
-                                <action selector="terminate:" target="Ady-hI-5gd" id="bxN-bs-K2C"/>
-                            </connections>
-                        </menuItem>
-                    </items>
-                </menu>
             </objects>
             <point key="canvasLocation" x="-247" y="-902"/>
         </scene>
